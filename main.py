@@ -1,4 +1,6 @@
 import os
+import json
+import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
 from requests_oauthlib import OAuth2Session
@@ -16,7 +18,9 @@ token_url = "https://accounts.spotify.com/api/token"
 # https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 scope = [
      "user-read-email",
-     "playlist-read-private"
+     "playlist-read-private",
+     "playlist-modify-private",
+     "playlist-modify-public",
      "playlist-read-collaborative"
  ]
 
@@ -40,3 +44,10 @@ print(token)
 # Fetch a protected resource
 r = spotify.get('https://api.spotify.com/v1/me')
 print(r.content)
+
+print("Please enter the track id: ", end='')
+track_id = input('')
+track_response = requests.get('https://api.spotify.com/v1/tracks/' + track_id)
+
+if track_response.status_code == 200:
+    track_detail = track_response.json()
