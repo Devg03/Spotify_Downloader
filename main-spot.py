@@ -20,12 +20,23 @@ sp = spotipy.Spotify(auth_manager = SpotifyOAuth(client_id = os.getenv('CLIENT_I
                                                  scope=scope))
 
 # # Requesting the track ID from the user
+print()
 print("Please enter your track id: ", end = ' ')
 track_id = input()
 
 # # Calling Spotify API to receive the track name from its ID
 track_info = sp.track(track_id=track_id, market=None)
-print(track_info['name'])
+# Filtering the artists' name from the track dict response
+track_name = track_info['name']
+# Filtering the artists' id from the track dict response
+artist_id = track_info["artists"][0]["id"]
+# Fetching artists' data from the artists' id
+artist_data = sp.artist(artist_id = artist_id)
+# Filtering the artists' name from the dict given by spotify API as the response
+artist_name = artist_data['name']
+
+print()
+print(f'Track name: {track_name}, Artist: {artist_name}')
 
 # Calling Spotify API to receive the top tracks of an artist and possibly extract the track IDs
 print("Enter the artist's id: ", end = ' ')
