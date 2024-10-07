@@ -1,8 +1,9 @@
 import os
 import spotipy
-import json
+import requests
 from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyOAuth
+from googleapiclient.discovery import build
 
 load_dotenv()
 
@@ -18,6 +19,8 @@ sp = spotipy.Spotify(auth_manager = SpotifyOAuth(client_id = os.getenv('CLIENT_I
                                                  client_secret = os.getenv('CLIENT_SECRET'), 
                                                  redirect_uri= os.getenv('REDIRECT_URI'),
                                                  scope=scope))
+
+yt_api_endpoint = "https://youtube-mp3-downloader2.p.rapidapi.com/ytmp3/ytmp3/"
 
 # # Requesting the track ID from the user
 print()
@@ -38,11 +41,30 @@ artist_name = artist_data['name']
 print()
 print(f'Track name: {track_name}, Artist: {artist_name}')
 
-# Calling Spotify API to receive the top tracks of an artist and possibly extract the track IDs
-print("Enter the artist's id: ", end = ' ')
-artist_id = input()
+def get_yt_video_url(api_key, artists_name, track_name):
+    yt = build('youtube', 'v3', developerKey=os.getenv("YT_API_KEY"))
 
-# Enumerating the top 10 tracks of the artists
-artists_top_tracks = sp.artist_top_tracks(artist_id = artist_id, country='US')
-for idx, item in enumerate(artists_top_tracks['tracks']):
-    print(idx + 1,item['name']) 
+    search_response = yt.search().list(
+        q = f'{artist_name} {track_name}',
+        part = 'snippet',
+        maxResults = 1,
+        type = "video"
+    ).execute()
+
+    if search_response['items']:
+        video_id = search_response['items'][0]['id']['videoId']
+        video_url = f"https://www.youtube.com/watch?v={video_id}"
+        print(video_url)
+    else:
+        return "No video found."
+
+get_yt_video_url(os.getenv('YT_API_KEY'), artists_name = artist_name, track_name = track_name)
+
+# headers = {
+# 	"x-rapidapi-key": "Sign Up for Key",
+# 	"x-rapidapi-host": "youtube-mp3-downloader2.p.rapidapi.com"
+# }
+
+# response = requests.get(yt_api_endpoint, headers=headers, params=querystring)
+
+# print(response.json())
