@@ -6,14 +6,17 @@ from spotipy.oauth2 import SpotifyOAuth
 from googleapiclient.discovery import build
 
 load_dotenv()
-
+scope = [
+     "user-read-email",
+     "playlist-read-private",
+     "playlist-modify-private",
+     "playlist-modify-public",
+     "playlist-read-collaborative"
+ ]
 sp = spotipy.Spotify(auth_manager = SpotifyOAuth(client_id = os.getenv('CLIENT_ID'),
                                                  client_secret = os.getenv('CLIENT_SECRET'), 
-                                                 redirect_uri= os.getenv('REDIRECT_URI')
-                                                ))
-
-# Global Variable to store the YT ID later on from the get_yt_video_url function
-yt_vid_id = ""
+                                                 redirect_uri= os.getenv('REDIRECT_URI'),
+                                                scope=scope))
 
 # # Requesting the Spotify track ID from the user
 print()
@@ -52,29 +55,23 @@ def get_yt_video_url(api_key, artists_name, track_name):
         return "No video found."
 
 # Stores the youtube video id to generate query string
-if get_yt_video_url(os.getenv('YT_API_KEY'), artists_name = artist_name, track_name = track_name) != "No video found.":    
-    # YT-MP3 RAPID API CALLS 
-    # -> 50 REQUESTS A MONTH & 1000 REQUEST PER HOUR (FREE PLAN)
+yt_vid_id = get_yt_video_url(os.getenv('YT_API_KEY'), artists_name = artist_name, track_name = track_name)
+# YT-MP3 RAPID API CALLS 
+# -> 50 REQUESTS A MONTH & 1000 REQUEST PER HOUR (FREE PLAN)
 
-    # URL Endpoint for the RapidAPI
-    url = "https://youtube-mp3-downloader2.p.rapidapi.com/ytmp3/ytmp3/"
+# URL Endpoint for the RapidAPI
+url = "https://youtube-mp3-downloader2.p.rapidapi.com/ytmp3/ytmp3/"
 
-    # Query String for RapidApi
-    querystring = {"url":f"https://www.youtube.com/watch?v={yt_vid_id}","quality":"320"}
+# Query String for RapidApi
+querystring = {"url":f"https://www.youtube.com/watch?v={yt_vid_id}","quality":"320"}
 
-    headers = {
-        "x-rapidapi-key": os.getenv('RAPID_API_KEY'),
-        "x-rapidapi-host": "youtube-mp3-downloader2.p.rapidapi.com"
-    }
+headers = {
+    "x-rapidapi-key": os.getenv('RAPID_API_KEY'),
+    "x-rapidapi-host": "youtube-mp3-downloader2.p.rapidapi.com"
+}
 
-    # GET request to YT-MP3 RapidAPI
-    response = requests.get(url, headers=headers, params=querystring)
+# GET request to YT-MP3 RapidAPI
+response = requests.get(url, headers=headers, params=querystring)
 
-    # Filters out the download link and prints it for testing
-    print(response.json()['dlink'])
-
-else:
-    # Prints No Video Found if the youtube vid id is not found
-    print('No Video Found!')
-
-# TODO: Create REACT Front-End
+# Filters out the download link and prints it for testing
+print(response.json()['dlink'])
