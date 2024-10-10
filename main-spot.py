@@ -76,3 +76,5 @@ if get_yt_video_url(os.getenv('YT_API_KEY'), artists_name = artist_name, track_n
 else:
     # Prints No Video Found if the youtube vid id is not found
     print('No Video Found!')
+
+# TODO: Create REACT Front-End
