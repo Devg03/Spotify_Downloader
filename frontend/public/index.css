@@ -1,0 +1,11 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  background: url('https://images.pexels.com/photos/3213982/pexels-photo-3213982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+  height: auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
