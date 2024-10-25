@@ -38,7 +38,7 @@ print()
 print(f'Track name: {track_name}, Artist: {artist_name}')
 
 # Function to call YT API to get the track vid url's details
-def get_yt_video_url(api_key, artists_name, track_name):
+def get_yt_video_url(track_name):
     yt = build('youtube', 'v3', developerKey=os.getenv("YT_API_KEY"))
 
     search_response = yt.search().list(
