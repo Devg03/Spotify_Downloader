@@ -13,8 +13,8 @@ const SearchBar = () => {
     
     return(
         <div className="search-container">
-                <input type="text" placeholder="Search.." name="search" onChange={handleInputChange} />
-                <button onClick= {handleSubmit} type="submit">Submit</button> // Submit Button
+            <input type="text" placeholder="Search.." name="search" onChange={handleInputChange} />
+            <button onClick= {handleSubmit} type="submit">Submit</button>
         </div> 
     );
 }
