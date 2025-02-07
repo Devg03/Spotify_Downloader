@@ -1,0 +1,65 @@
+# ---- General ----
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+node_modules/
+.env
+*.swp
+*.swo
+
+# ---- Python (Flask) ----
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+instance/
+*.sqlite3
+*.db
+*.egg-info/
+coverage/
+dist/
+build/
+*.pytest_cache/
+
+# ---- React (Frontend) ----
+node_modules/
+*.cache
+build/
+dist/
+*.lock
+*.env.local
+*.env.development
+*.env.production
+.yarn/
+.yarnrc.yml
+.npm/
+.npmrc
+
+# ---- MacOS System Files ----
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# ---- Logs and Debugging ----
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# ---- IDE/Editor Specific ----
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.idea/
+
+# ---- Deployment Artifacts ----
+*.tar.gz
+*.zip
+*.bak
+*.orig
