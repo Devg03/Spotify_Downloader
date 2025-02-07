@@ -1,4 +1,5 @@
 import os
+import json
 import spotipy
 import requests
 from dotenv import load_dotenv
@@ -55,7 +56,7 @@ def get_yt_video_url(track_name):
         return "No video found."
 
 # Stores the youtube video id to generate query string
-yt_vid_id = get_yt_video_url(os.getenv('YT_API_KEY'), artists_name = artist_name, track_name = track_name)
+yt_vid_id = get_yt_video_url(os.getenv('YT_API_KEY'))
 # YT-MP3 RAPID API CALLS 
 # -> 50 REQUESTS A MONTH & 1000 REQUEST PER HOUR (FREE PLAN)
 
@@ -74,4 +75,5 @@ headers = {
 response = requests.get(url, headers=headers, params=querystring)
 
 # Filters out the download link and prints it for testing
-print(response.json()['dlink'])
+data = str(json.loads(response))
+print(data)
