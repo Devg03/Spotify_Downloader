@@ -31,14 +31,13 @@ def home():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
-    return redirect(url_for('display'))
+    return redirect(url_for('get_yt_id'))
 
 @app.route('/callback')
 def callback():
     sp_oauth.get_access_token(request.args['code'])
-    return redirect(url_for('display'))
+    return redirect(url_for('get_yt_id'))
 
-@app.route('/get_track_data')
 def get_track_data():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
@@ -49,13 +48,11 @@ def get_track_data():
 
     return track_data
 
-@app.route('/get_track')
 def get_track():
     track_data = get_track_data()
     track_name = track_data['name']
     return track_name
     
-@app.route('/get_artist')
 def get_artist():
     track_data = get_track_data()
     artist_id = track_data["artists"][0]["id"]
@@ -71,13 +68,24 @@ def display():
 
     return track_name + " by: " + artist_name
 
+@app.route('/get_yt_id')
+def get_yt_id():
+    track_name = get_track()
+    artist_name = get_artist()
+    yt = build('youtube', 'v3', developerKey=os.getenv("YT_API_KEY"))
+    
+    search_response = yt.search().list(
+        q = f'{track_name} {artist_name}',
+        part = 'snippet',
+        maxResults = 1,
+        type = "video"
+    ).execute()
 
-# @app.route("yt_url")
-# def get_yt_url():
-#     yt_key = build('youtube', 'v3', developerKey=os.getenv("YT_API_KEY"))
-#     search_response = yt.search().list(
-#         query = f{}
-#     )
+    if search_response['items']:
+        yt_vid_id = search_response["items"][0]["id"]["videoId"]
+        return yt_vid_id
+    else:
+        return "No Video Found."
 
 @app.route('/logout')
 def logout():
