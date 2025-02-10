@@ -31,26 +31,53 @@ def home():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
-    return redirect(url_for('get_tracks'))
+    return redirect(url_for('display'))
 
 @app.route('/callback')
 def callback():
     sp_oauth.get_access_token(request.args['code'])
-    return redirect(url_for('get_tracks'))
+    return redirect(url_for('display'))
 
-@app.route('/get_tracks')
-def get_tracks():
-
+@app.route('/get_track_data')
+def get_track_data():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
     
     track_id = "https://open.spotify.com/track/1UsQe17Ef7tV1ahFqHEFR3?si=30456dc2e9084347"
+    track_data = sp.track(track_id = track_id)
 
-    track_info = sp.track(track_id = track_id)
-    track_name = '<br>'.join({track_info['name']})
+    return track_data
 
+@app.route('/get_track')
+def get_track():
+    track_data = get_track_data()
+    track_name = track_data['name']
     return track_name
+    
+@app.route('/get_artist')
+def get_artist():
+    track_data = get_track_data()
+    artist_id = track_data["artists"][0]["id"]
+    artist_data = sp.artist(artist_id = artist_id)
+    artist_name = artist_data['name']
+
+    return artist_name
+
+@app.route('/display')
+def display():
+    track_name = get_track()
+    artist_name = get_artist()
+
+    return track_name + " by: " + artist_name
+
+
+# @app.route("yt_url")
+# def get_yt_url():
+#     yt_key = build('youtube', 'v3', developerKey=os.getenv("YT_API_KEY"))
+#     search_response = yt.search().list(
+#         query = f{}
+#     )
 
 @app.route('/logout')
 def logout():
